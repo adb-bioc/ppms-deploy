@@ -1,0 +1,30 @@
+Options -Indexes
+Options +FollowSymLinks
+
+RewriteEngine On
+
+# ── CI3 front controller ─────────────────────────────────────────────────────
+# Remove index.php from URLs and route everything through CI3.
+# Works for both root installs (http://localhost/) and
+# subfolder installs (http://localhost/ppms/).
+
+# If the request is for a real file or directory, serve it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Send everything else to index.php — CI3 reads PATH_INFO
+RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_value memory_limit 256M
+    php_value max_execution_time 120
+</IfModule>
+<IfModule mod_php8.c>
+    php_value memory_limit 256M
+    php_value max_execution_time 120
+</IfModule>
